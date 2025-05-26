@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'produtos/style.css' %}">
+    <title>E-SHOP</title>
+</head>
+<body>
+    <h1>E-SHOP</h1>
+    <h2>Lista de produtos</h2>
+
+    <table>
+        <tr>
+            <th>Nome do Produto</th>
+            <th>Quantidade</th>
+            <th>Valor</th>
+            <th>Ações</th>
+        </tr>
+        {% for produto in produtos %}
+        <tr>
+            <td>{{ produto.nome }}</td>
+            <td>{{ produto.quantidade }}</td>
+            <td>R$ {{ produto.valor }}</td>
+            <td>
+                <form method="get" action="{% url 'editar_produto' produto.id %}" style="display:inline;">
+                    <button class="btn" type="submit">Alterar</button>
+                </form>
+                <form method="post" action="{% url 'remover_produto' produto.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="btn" type="submit">Remover</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="buttons">
+        <a href="{% url 'adicionar_produto' %}" class="btn">ADICIONAR</a>
+    </div>
+</body>
+</html>
