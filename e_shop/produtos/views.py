@@ -1,28 +1,33 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Produto
 from .forms import ProdutoForm
 
-def listar_produtos(request):
-    produtos = Produto.objects.all()
-    return render(request, 'produtos/lista.html', {'produtos': produtos})
 
-def adicionar_produto(request):
-    form = ProdutoForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('listar_produtos')
-    return render(request, 'produtos/form.html', {'form': form})
 
-def editar_produto(request, id):
-    produto = get_object_or_404(Produto, id=id)
-    form = ProdutoForm(request.POST or None, instance=produto)
-    if form.is_valid():
-        form.save()
-        return redirect('listar_produtos')
-    return render(request, 'produtos/form.html', {'form': form})
+class ProdutoListView(ListView):
+    model = Produto
+    template_name = 'produtos/lista.html'
+    context_object_name = 'produtos'
 
-def remover_produto(request, id):
-    produto = get_object_or_404(Produto, id=id)
-    if request.method == "POST":
-        produto.delete()
-    return redirect('listar_produtos')
+
+
+class ProdutoCreateView(CreateView):
+    model = Produto
+    form_class = ProdutoForm
+    template_name = 'produtos/form.html'
+    success_url = reverse_lazy('listar_produtos')
+
+
+
+class ProdutoUpdateView(UpdateView):
+    model = Produto
+    form_class = ProdutoForm
+    template_name = 'produtos/form.html'
+    success_url = reverse_lazy('listar_produtos')
+
+
+class ProdutoDeleteView(DeleteView):
+    model = Produto
+    template_name = 'produtos/confirm_delete.html'  
+    success_url = reverse_lazy('listar_produtos')
