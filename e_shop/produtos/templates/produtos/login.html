@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login ou Cadastro</title>
+    <link rel="stylesheet" href="{% static 'styles/Login/login.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        <h1 id="form-title">Login</h1>
+
+        <p id="message" class="error hidden"></p>
+
+        <!-- Formulário de Login -->
+        <form id="login-form" onsubmit="login(event)">
+            <div class="form-group">
+                <label>Usuário:</label>
+                <input type="text" id="login-username" required>
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+
+        <!-- Formulário de Registro -->
+        <form id="register-form" class="hidden" onsubmit="register(event)">
+            <div class="form-group">
+                <label>Usuário:</label>
+                <input type="text" id="register-username" required>
+            </div>
+            <div class="form-group">
+                <label>Senha:</label>
+                <input type="password" id="register-password" required>
+            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <div class="toggle-link">
+            <p id="show-register">Não tem conta? <a onclick="toggleForms(true)">Cadastre-se</a></p>
+            <p id="show-login" class="hidden">Já tem conta? <a onclick="toggleForms(false)">Faça login</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Mock
+        const usuarios = [
+            { username: "admin", password: "admin" }
+        ];
+
+        function toggleForms(showRegister) {
+            document.getElementById('login-form').classList.toggle('hidden', showRegister);
+            document.getElementById('register-form').classList.toggle('hidden', !showRegister);
+            document.getElementById('show-register').classList.toggle('hidden', showRegister);
+            document.getElementById('show-login').classList.toggle('hidden', !showRegister);
+            document.getElementById('form-title').innerText = showRegister ? "Cadastro" : "Login";
+            clearMessage();
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+
+            const encontrado = usuarios.find(u => u.username === user && u.password === pass);
+
+            if (encontrado) {
+                window.location.href = "{% url 'listar_produtos' %}";
+                
+            } else {
+                showMessage("Usuário ou senha inválidos.", "error");
+            }
+        }
+
+        function register(event) {
+            event.preventDefault();
+            const user = document.getElementById('register-username').value;
+            const pass = document.getElementById('register-password').value;
+
+            const existe = usuarios.find(u => u.username === user);
+
+            if (existe) {
+                showMessage("Usuário já existe!", "error");
+            } else {
+                usuarios.push({ username: user, password: pass });
+                showMessage("Cadastro realizado com sucesso!", "success");
+                toggleForms(false);
+            }
+        }
+
+        function showMessage(msg, type) {
+            const el = document.getElementById('message');
+            el.className = type;
+            el.innerText = msg;
+            el.classList.remove('hidden');
+        }
+
+        function clearMessage() {
+            const el = document.getElementById('message');
+            el.classList.add('hidden');
+            el.innerText = '';
+        }
+    </script>
+</body>
+</html>
