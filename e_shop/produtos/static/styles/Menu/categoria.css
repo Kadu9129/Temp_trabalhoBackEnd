@@ -1,0 +1,20 @@
+.categorias {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.categoria-lista {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.categoria {
+    background-color: #00a8e8;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+}

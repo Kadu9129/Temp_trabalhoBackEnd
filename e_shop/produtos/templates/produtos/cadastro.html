@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>E-SHOP</title>
+    <link rel="stylesheet" href="{% static 'styles/Lista/cadastro.css' %}">
+
+</head>
+<body>
+
+    <h1>Cadastro Produto E-SHOP</h1>
+    <h2>Lista de Produtos Disponíveis</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome do Produto</th>
+                <th>Quantidade</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto.nome }}</td>
+                <td>{{ produto.quantidade }}</td>
+                <td>R$ {{ produto.valor }}</td>
+                <td>
+                    <form method="get" action="{% url 'editar_produto' produto.id %}" style="display:inline;">
+                        <button type="submit">Alterar</button>
+                    </form>
+                    <form method="post" action="{% url 'remover_produto' produto.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Remover</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhum produto cadastrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="buttons">
+        <a href="{% url 'adicionar_produto' %}" class="btn">Adicionar Produto</a>
+    </div>
+
+</body>
+</html>
